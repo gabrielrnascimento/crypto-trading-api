@@ -1,0 +1,11 @@
+{
+  "name": "offer-counter-api",
+  "version": "0.0.0",
+  "description": "API do Balcão de ofertas",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Gabriel Nascimento",
+  "license": "ISC"
+}
