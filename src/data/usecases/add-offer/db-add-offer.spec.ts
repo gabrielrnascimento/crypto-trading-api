@@ -107,15 +107,6 @@ describe('DbAddOffer', () => {
     await expect(promise).rejects.toThrow(new Error());
   });
 
-  test('should return true on success', async () => {
-    const { sut } = makeSut();
-
-    const offer = makeAddOfferModel();
-    const response = await sut.add(offer);
-
-    expect(response).toBe(true);
-  });
-
   test('should return false if AddOfferRepository returns false', async () => {
     const { sut, addOfferRepositorySpy } = makeSut();
     addOfferRepositorySpy.result = false;
@@ -133,6 +124,16 @@ describe('DbAddOffer', () => {
     await sut.add(offer);
 
     expect(checkOfferCreationDailyLimitRepositorySpy.params).toEqual(offer);
+  });
+
+  test('should throw if CheckOfferCreationDailyLimitRepository throws', async () => {
+    const { sut, checkOfferCreationDailyLimitRepositorySpy } = makeSut();
+    jest.spyOn(checkOfferCreationDailyLimitRepositorySpy, 'validate').mockRejectedValueOnce(new Error());
+
+    const offer = makeAddOfferModel();
+    const promise = sut.add(offer);
+
+    await expect(promise).rejects.toThrow(new Error());
   });
 
   test('should return false if CheckOfferCreationDailyLimitRepository returns false', async () => {
@@ -162,5 +163,14 @@ describe('DbAddOffer', () => {
     const response = await sut.add(offer);
 
     expect(response).toBe(false);
+  });
+
+  test('should return true on success', async () => {
+    const { sut } = makeSut();
+
+    const offer = makeAddOfferModel();
+    const response = await sut.add(offer);
+
+    expect(response).toBe(true);
   });
 });
