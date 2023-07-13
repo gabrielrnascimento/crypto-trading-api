@@ -1,6 +1,6 @@
 import { type User, type Coin, type Wallet, type Offer } from '../../../domain/models';
 import { type AddOfferModel } from '../../../domain/usecases/add-offer';
-import { type CheckOfferCreationDailyLimitRepository } from '../../protocols';
+import { type CheckBalanceRepository, type CheckOfferCreationDailyLimitRepository } from '../../protocols';
 import { type AddOfferRepository } from '../../protocols/add-offer-repository';
 import { DbAddOffer } from './db-add-offer';
 
@@ -12,6 +12,12 @@ class AddOfferRepositoryStub implements AddOfferRepository {
 
 class CheckOfferCreationDailyLimitRepositoryStub implements CheckOfferCreationDailyLimitRepository {
   async validate (offerData: Offer): Promise<boolean> {
+    return true;
+  }
+}
+
+class CheckBalanceRepositoryStub implements CheckBalanceRepository {
+  async validate (data: Offer): Promise<boolean> {
     return true;
   }
 }
@@ -52,17 +58,20 @@ type SutTypes = {
   sut: DbAddOffer
   addOfferRepositoryStub: AddOfferRepository
   checkOfferCreationDailyLimitRepositoryStub: CheckOfferCreationDailyLimitRepository
+  checkBalanceRepositoryStub: CheckBalanceRepository
 };
 
 const makeSut = (): SutTypes => {
   const addOfferRepositoryStub = new AddOfferRepositoryStub();
   const checkOfferCreationDailyLimitRepositoryStub = new CheckOfferCreationDailyLimitRepositoryStub();
-  const sut = new DbAddOffer(addOfferRepositoryStub, checkOfferCreationDailyLimitRepositoryStub);
+  const checkBalanceRepositoryStub = new CheckBalanceRepositoryStub();
+  const sut = new DbAddOffer(addOfferRepositoryStub, checkOfferCreationDailyLimitRepositoryStub, checkBalanceRepositoryStub);
 
   return {
     sut,
     addOfferRepositoryStub,
-    checkOfferCreationDailyLimitRepositoryStub
+    checkOfferCreationDailyLimitRepositoryStub,
+    checkBalanceRepositoryStub
   };
 };
 
@@ -124,5 +133,15 @@ describe('DbAddOffer', () => {
     const response = await sut.add(offer);
 
     expect(response).toBe(false);
+  });
+
+  test('should call CheckBalanceRepository with correct values', async () => {
+    const { sut, checkBalanceRepositoryStub } = makeSut();
+    const validateSpy = jest.spyOn(checkBalanceRepositoryStub, 'validate');
+
+    const offer = makeAddOfferModel();
+    await sut.add(offer);
+
+    expect(validateSpy).toHaveBeenCalledWith(offer);
   });
 });
