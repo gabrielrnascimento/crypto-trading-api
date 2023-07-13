@@ -144,4 +144,14 @@ describe('DbAddOffer', () => {
 
     expect(validateSpy).toHaveBeenCalledWith(offer);
   });
+
+  test('should return false if CheckBalanceRepository returns false', async () => {
+    const { sut, checkBalanceRepositoryStub } = makeSut();
+    jest.spyOn(checkBalanceRepositoryStub, 'validate').mockResolvedValueOnce(false);
+
+    const offer = makeAddOfferModel();
+    const response = await sut.add(offer);
+
+    expect(response).toBe(false);
+  });
 });
