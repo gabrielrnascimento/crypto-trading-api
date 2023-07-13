@@ -66,4 +66,14 @@ describe('DbAddOffer', () => {
 
     expect(addSpy).toHaveBeenCalledWith(offer);
   });
+
+  test('should throw if AddAccountRepository throws', async () => {
+    const { sut, addOfferRepositoryStub } = makeSut();
+    jest.spyOn(addOfferRepositoryStub, 'add').mockRejectedValueOnce(new Error());
+
+    const offer = makeAddOfferModel();
+    const promise = sut.add(offer);
+
+    await expect(promise).rejects.toThrow(new Error());
+  });
 });
