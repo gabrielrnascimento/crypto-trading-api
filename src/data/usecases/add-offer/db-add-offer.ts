@@ -11,7 +11,10 @@ export class DbAddOffer {
   }
 
   async add (data: AddOfferModel): Promise<boolean> {
-    await this.checkOfferCreationDailyLimitRepository.validate(data);
+    const isValid = await this.checkOfferCreationDailyLimitRepository.validate(data);
+    if (!isValid) {
+      return isValid;
+    }
     return await this.addOfferRepository.add(data);
   }
 }
