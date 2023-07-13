@@ -4,21 +4,33 @@ import { type CheckBalanceRepository, type CheckOfferCreationDailyLimitRepositor
 import { type AddOfferRepository } from '../../protocols/add-offer-repository';
 import { DbAddOffer } from './db-add-offer';
 
-class AddOfferRepositoryStub implements AddOfferRepository {
+class AddOfferRepositorySpy implements AddOfferRepository {
+  params: AddOfferModel;
+  result = true;
+
   async add (data: AddOfferModel): Promise<boolean> {
-    return true;
+    this.params = data;
+    return this.result;
   }
 }
 
-class CheckOfferCreationDailyLimitRepositoryStub implements CheckOfferCreationDailyLimitRepository {
+class CheckOfferCreationDailyLimitRepositorySpy implements CheckOfferCreationDailyLimitRepository {
+  params: Offer;
+  result = true;
+
   async validate (offerData: Offer): Promise<boolean> {
-    return true;
+    this.params = offerData;
+    return this.result;
   }
 }
 
-class CheckBalanceRepositoryStub implements CheckBalanceRepository {
+class CheckBalanceRepositorySpy implements CheckBalanceRepository {
+  params: Offer;
+  result = true;
+
   async validate (data: Offer): Promise<boolean> {
-    return true;
+    this.params = data;
+    return this.result;
   }
 }
 
@@ -56,39 +68,38 @@ const makeAddOfferModel = (): AddOfferModel => ({
 
 type SutTypes = {
   sut: DbAddOffer
-  addOfferRepositoryStub: AddOfferRepository
-  checkOfferCreationDailyLimitRepositoryStub: CheckOfferCreationDailyLimitRepository
-  checkBalanceRepositoryStub: CheckBalanceRepository
+  addOfferRepositorySpy: AddOfferRepositorySpy
+  checkOfferCreationDailyLimitRepositorySpy: CheckOfferCreationDailyLimitRepositorySpy
+  checkBalanceRepositorySpy: CheckBalanceRepositorySpy
 };
 
 const makeSut = (): SutTypes => {
-  const addOfferRepositoryStub = new AddOfferRepositoryStub();
-  const checkOfferCreationDailyLimitRepositoryStub = new CheckOfferCreationDailyLimitRepositoryStub();
-  const checkBalanceRepositoryStub = new CheckBalanceRepositoryStub();
-  const sut = new DbAddOffer(addOfferRepositoryStub, checkOfferCreationDailyLimitRepositoryStub, checkBalanceRepositoryStub);
+  const addOfferRepositorySpy = new AddOfferRepositorySpy();
+  const checkOfferCreationDailyLimitRepositorySpy = new CheckOfferCreationDailyLimitRepositorySpy();
+  const checkBalanceRepositorySpy = new CheckBalanceRepositorySpy();
+  const sut = new DbAddOffer(addOfferRepositorySpy, checkOfferCreationDailyLimitRepositorySpy, checkBalanceRepositorySpy);
 
   return {
     sut,
-    addOfferRepositoryStub,
-    checkOfferCreationDailyLimitRepositoryStub,
-    checkBalanceRepositoryStub
+    addOfferRepositorySpy,
+    checkOfferCreationDailyLimitRepositorySpy,
+    checkBalanceRepositorySpy
   };
 };
 
 describe('DbAddOffer', () => {
   test('should call AddAccountRepository with correct values', async () => {
-    const { sut, addOfferRepositoryStub } = makeSut();
-    const addSpy = jest.spyOn(addOfferRepositoryStub, 'add');
+    const { sut, addOfferRepositorySpy } = makeSut();
 
     const offer = makeAddOfferModel();
     await sut.add(offer);
 
-    expect(addSpy).toHaveBeenCalledWith(offer);
+    expect(addOfferRepositorySpy.params).toEqual(offer);
   });
 
   test('should throw if AddAccountRepository throws', async () => {
-    const { sut, addOfferRepositoryStub } = makeSut();
-    jest.spyOn(addOfferRepositoryStub, 'add').mockRejectedValueOnce(new Error());
+    const { sut, addOfferRepositorySpy } = makeSut();
+    jest.spyOn(addOfferRepositorySpy, 'add').mockRejectedValueOnce(new Error());
 
     const offer = makeAddOfferModel();
     const promise = sut.add(offer);
@@ -106,8 +117,8 @@ describe('DbAddOffer', () => {
   });
 
   test('should return false if AddOfferRepository returns false', async () => {
-    const { sut, addOfferRepositoryStub } = makeSut();
-    jest.spyOn(addOfferRepositoryStub, 'add').mockResolvedValueOnce(false);
+    const { sut, addOfferRepositorySpy } = makeSut();
+    addOfferRepositorySpy.result = false;
 
     const offer = makeAddOfferModel();
     const response = await sut.add(offer);
@@ -116,18 +127,17 @@ describe('DbAddOffer', () => {
   });
 
   test('should call CheckOfferCreationDailyLimitRepository with correct values', async () => {
-    const { sut, checkOfferCreationDailyLimitRepositoryStub } = makeSut();
-    const validateSpy = jest.spyOn(checkOfferCreationDailyLimitRepositoryStub, 'validate');
+    const { sut, checkOfferCreationDailyLimitRepositorySpy } = makeSut();
 
     const offer = makeAddOfferModel();
     await sut.add(offer);
 
-    expect(validateSpy).toHaveBeenCalledWith(offer);
+    expect(checkOfferCreationDailyLimitRepositorySpy.params).toEqual(offer);
   });
 
   test('should return false if CheckOfferCreationDailyLimitRepository returns false', async () => {
-    const { sut, checkOfferCreationDailyLimitRepositoryStub } = makeSut();
-    jest.spyOn(checkOfferCreationDailyLimitRepositoryStub, 'validate').mockResolvedValueOnce(false);
+    const { sut, checkOfferCreationDailyLimitRepositorySpy } = makeSut();
+    checkOfferCreationDailyLimitRepositorySpy.result = false;
 
     const offer = makeAddOfferModel();
     const response = await sut.add(offer);
@@ -136,18 +146,17 @@ describe('DbAddOffer', () => {
   });
 
   test('should call CheckBalanceRepository with correct values', async () => {
-    const { sut, checkBalanceRepositoryStub } = makeSut();
-    const validateSpy = jest.spyOn(checkBalanceRepositoryStub, 'validate');
+    const { sut, checkBalanceRepositorySpy } = makeSut();
 
     const offer = makeAddOfferModel();
     await sut.add(offer);
 
-    expect(validateSpy).toHaveBeenCalledWith(offer);
+    expect(checkBalanceRepositorySpy.params).toEqual(offer);
   });
 
   test('should return false if CheckBalanceRepository returns false', async () => {
-    const { sut, checkBalanceRepositoryStub } = makeSut();
-    jest.spyOn(checkBalanceRepositoryStub, 'validate').mockResolvedValueOnce(false);
+    const { sut, checkBalanceRepositorySpy } = makeSut();
+    checkBalanceRepositorySpy.result = false;
 
     const offer = makeAddOfferModel();
     const response = await sut.add(offer);
