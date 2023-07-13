@@ -1,10 +1,17 @@
-import { type User, type Coin, type Wallet } from '../../../domain/models';
+import { type User, type Coin, type Wallet, type Offer } from '../../../domain/models';
 import { type AddOfferModel } from '../../../domain/usecases/add-offer';
+import { type CheckOfferCreationDailyLimitRepository } from '../../protocols';
 import { type AddOfferRepository } from '../../protocols/add-offer-repository';
 import { DbAddOffer } from './db-add-offer';
 
 class AddOfferRepositoryStub implements AddOfferRepository {
   async add (data: AddOfferModel): Promise<boolean> {
+    return true;
+  }
+}
+
+class CheckOfferCreationDailyLimitRepositoryStub implements CheckOfferCreationDailyLimitRepository {
+  async validate (offerData: Offer): Promise<boolean> {
     return true;
   }
 }
@@ -42,17 +49,20 @@ const makeAddOfferModel = (): AddOfferModel => ({
 });
 
 type SutTypes = {
-  addOfferRepositoryStub: AddOfferRepository
   sut: DbAddOffer
+  addOfferRepositoryStub: AddOfferRepository
+  checkOfferCreationDailyLimitRepositoryStub: CheckOfferCreationDailyLimitRepository
 };
 
 const makeSut = (): SutTypes => {
   const addOfferRepositoryStub = new AddOfferRepositoryStub();
-  const sut = new DbAddOffer(addOfferRepositoryStub);
+  const checkOfferCreationDailyLimitRepositoryStub = new CheckOfferCreationDailyLimitRepositoryStub();
+  const sut = new DbAddOffer(addOfferRepositoryStub, checkOfferCreationDailyLimitRepositoryStub);
 
   return {
+    sut,
     addOfferRepositoryStub,
-    sut
+    checkOfferCreationDailyLimitRepositoryStub
   };
 };
 
@@ -94,5 +104,15 @@ describe('DbAddOffer', () => {
     const response = await sut.add(offer);
 
     expect(response).toBe(false);
+  });
+
+  test('should call CheckOfferCreationDailyLimitRepository with correct values', async () => {
+    const { sut, checkOfferCreationDailyLimitRepositoryStub } = makeSut();
+    const validateSpy = jest.spyOn(checkOfferCreationDailyLimitRepositoryStub, 'validate');
+
+    const offer = makeAddOfferModel();
+    await sut.add(offer);
+
+    expect(validateSpy).toHaveBeenCalledWith(offer);
   });
 });
