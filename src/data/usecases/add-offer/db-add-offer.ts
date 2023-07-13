@@ -8,7 +8,8 @@ export class DbAddOffer {
     this.addOfferRepository = addOfferRepository;
   }
 
-  async add (data: AddOfferModel): Promise<void> {
-    await this.addOfferRepository.add(data);
+  async add (data: AddOfferModel): Promise<boolean> {
+    const isValid = await this.addOfferRepository.add(data);
+    return isValid;
   }
 }
