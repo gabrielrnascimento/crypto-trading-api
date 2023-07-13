@@ -4,8 +4,8 @@ import { type AddOfferRepository } from '../../protocols/add-offer-repository';
 import { DbAddOffer } from './db-add-offer';
 
 class AddOfferRepositoryStub implements AddOfferRepository {
-  async add (data: AddOfferModel): Promise<AddOfferModel> {
-    return makeAddOfferModel();
+  async add (data: AddOfferModel): Promise<boolean> {
+    return true;
   }
 }
 
@@ -75,5 +75,14 @@ describe('DbAddOffer', () => {
     const promise = sut.add(offer);
 
     await expect(promise).rejects.toThrow(new Error());
+  });
+
+  test('should return true on success', async () => {
+    const { sut } = makeSut();
+
+    const offer = makeAddOfferModel();
+    const response = await sut.add(offer);
+
+    expect(response).toBe(true);
   });
 });
