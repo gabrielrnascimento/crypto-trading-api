@@ -155,6 +155,16 @@ describe('DbAddOffer', () => {
     expect(checkBalanceRepositorySpy.params).toEqual(offer);
   });
 
+  test('should throw if CheckBalanceRepository throws', async () => {
+    const { sut, checkBalanceRepositorySpy } = makeSut();
+    jest.spyOn(checkBalanceRepositorySpy, 'validate').mockRejectedValueOnce(new Error());
+
+    const offer = makeAddOfferModel();
+    const promise = sut.add(offer);
+
+    await expect(promise).rejects.toThrow(new Error());
+  });
+
   test('should return false if CheckBalanceRepository returns false', async () => {
     const { sut, checkBalanceRepositorySpy } = makeSut();
     checkBalanceRepositorySpy.result = false;
