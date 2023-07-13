@@ -115,4 +115,14 @@ describe('DbAddOffer', () => {
 
     expect(validateSpy).toHaveBeenCalledWith(offer);
   });
+
+  test('should return false if CheckOfferCreationDailyLimitRepository returns false', async () => {
+    const { sut, checkOfferCreationDailyLimitRepositoryStub } = makeSut();
+    jest.spyOn(checkOfferCreationDailyLimitRepositoryStub, 'validate').mockResolvedValueOnce(false);
+
+    const offer = makeAddOfferModel();
+    const response = await sut.add(offer);
+
+    expect(response).toBe(false);
+  });
 });
