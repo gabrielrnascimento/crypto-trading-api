@@ -41,10 +41,24 @@ const makeAddOfferModel = (): AddOfferModel => ({
   totalPrice: 35.0
 });
 
+type SutTypes = {
+  addOfferRepositoryStub: AddOfferRepository
+  sut: DbAddOffer
+};
+
+const makeSut = (): SutTypes => {
+  const addOfferRepositoryStub = new AddOfferRepositoryStub();
+  const sut = new DbAddOffer(addOfferRepositoryStub);
+
+  return {
+    addOfferRepositoryStub,
+    sut
+  };
+};
+
 describe('DbAddOffer', () => {
   test('should call AddAccountRepository with correct values', async () => {
-    const addOfferRepositoryStub = new AddOfferRepositoryStub();
-    const sut = new DbAddOffer(addOfferRepositoryStub);
+    const { sut, addOfferRepositoryStub } = makeSut();
     const addSpy = jest.spyOn(addOfferRepositoryStub, 'add');
 
     const offer = makeAddOfferModel();
