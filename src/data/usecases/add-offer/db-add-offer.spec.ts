@@ -85,4 +85,14 @@ describe('DbAddOffer', () => {
 
     expect(response).toBe(true);
   });
+
+  test('should return false if AddOfferRepository returns false', async () => {
+    const { sut, addOfferRepositoryStub } = makeSut();
+    jest.spyOn(addOfferRepositoryStub, 'add').mockResolvedValueOnce(false);
+
+    const offer = makeAddOfferModel();
+    const response = await sut.add(offer);
+
+    expect(response).toBe(false);
+  });
 });
