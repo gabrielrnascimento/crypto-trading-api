@@ -1,38 +1,7 @@
-import { type User, type Coin, type Wallet, type Offer } from '../../../domain/models';
+import { type User, type Coin, type Wallet } from '../../../domain/models';
 import { type AddOfferModel } from '../../../domain/usecases/add-offer';
-import { type CheckBalanceRepository, type CheckOfferCreationDailyLimitRepository } from '../../protocols';
-import { type AddOfferRepository } from '../../protocols/add-offer-repository';
+import { AddOfferRepositorySpy, CheckOfferCreationDailyLimitRepositorySpy, CheckBalanceRepositorySpy } from '../../test/mocks/mock-db-offer';
 import { DbAddOffer } from './db-add-offer';
-
-class AddOfferRepositorySpy implements AddOfferRepository {
-  params: AddOfferModel;
-  result = true;
-
-  async add (data: AddOfferModel): Promise<boolean> {
-    this.params = data;
-    return this.result;
-  }
-}
-
-class CheckOfferCreationDailyLimitRepositorySpy implements CheckOfferCreationDailyLimitRepository {
-  params: Offer;
-  result = true;
-
-  async validate (offerData: Offer): Promise<boolean> {
-    this.params = offerData;
-    return this.result;
-  }
-}
-
-class CheckBalanceRepositorySpy implements CheckBalanceRepository {
-  params: Offer;
-  result = true;
-
-  async validate (data: Offer): Promise<boolean> {
-    this.params = data;
-    return this.result;
-  }
-}
 
 const makeCoinMock = (): Coin => ({
   id: 1,
