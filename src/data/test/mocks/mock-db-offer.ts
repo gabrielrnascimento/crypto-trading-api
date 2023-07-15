@@ -16,7 +16,7 @@ export class CheckOfferCreationDailyLimitRepositorySpy implements CheckOfferCrea
   params: Offer;
   result = true;
 
-  async validate (offerData: Offer): Promise<boolean> {
+  async validateLimit (offerData: Offer): Promise<boolean> {
     this.params = offerData;
     return this.result;
   }
@@ -26,7 +26,7 @@ export class CheckBalanceRepositorySpy implements CheckBalanceRepository {
   params: Offer;
   result = true;
 
-  async validate (data: Offer): Promise<boolean> {
+  async validateBalance (data: Offer): Promise<boolean> {
     this.params = data;
     return this.result;
   }

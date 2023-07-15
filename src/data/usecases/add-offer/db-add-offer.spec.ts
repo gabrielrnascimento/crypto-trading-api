@@ -64,7 +64,7 @@ describe('DbAddOffer', () => {
 
   test('should throw if CheckOfferCreationDailyLimitRepository throws', async () => {
     const { sut, checkOfferCreationDailyLimitRepositorySpy } = makeSut();
-    jest.spyOn(checkOfferCreationDailyLimitRepositorySpy, 'validate').mockRejectedValueOnce(new Error());
+    jest.spyOn(checkOfferCreationDailyLimitRepositorySpy, 'validateLimit').mockRejectedValueOnce(new Error());
 
     const offer = mockOffer();
     const promise = sut.add(offer);
@@ -93,7 +93,7 @@ describe('DbAddOffer', () => {
 
   test('should throw if CheckBalanceRepository throws', async () => {
     const { sut, checkBalanceRepositorySpy } = makeSut();
-    jest.spyOn(checkBalanceRepositorySpy, 'validate').mockRejectedValueOnce(new Error());
+    jest.spyOn(checkBalanceRepositorySpy, 'validateBalance').mockRejectedValueOnce(new Error());
 
     const offer = mockOffer();
     const promise = sut.add(offer);

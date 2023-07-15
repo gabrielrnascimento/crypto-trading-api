@@ -17,8 +17,8 @@ export class DbAddOffer {
   }
 
   async add (data: AddOfferModel): Promise<boolean> {
-    const isValidBalance = await this.checkBalanceRepository.validate(data);
-    const isValidLimit = await this.checkOfferCreationDailyLimitRepository.validate(data);
+    const isValidBalance = await this.checkBalanceRepository.validateBalance(data);
+    const isValidLimit = await this.checkOfferCreationDailyLimitRepository.validateLimit(data);
     if (isValidBalance && isValidLimit) {
       return await this.addOfferRepository.add(data);
     }
