@@ -1,8 +1,8 @@
 {
   "name": "offer-counter-api",
   "version": "0.0.0",
-  "description": "API do Balcão de ofertas",
-  "main": "index.js",
+  "description": "API para balcão de ofertas",
+  "main": "index.ts",
   "scripts": {
     "dev": "ts-node-dev --respawn src/main/index.ts",
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
@@ -26,5 +26,11 @@
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "pg": "^8.11.1",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.3.17",
+    "typeorm-extension": "^2.8.1"
   }
 }
