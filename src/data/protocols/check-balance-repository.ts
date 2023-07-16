@@ -1,5 +1,5 @@
-import { type InputAddOfferDTO } from '../dtos/';
+import { type InputCheckBalanceRepositoryDTO } from '../dtos';
 
 export interface CheckBalanceRepository {
-  validateBalance: (data: InputAddOfferDTO) => Promise<boolean>
+  validateBalance: (data: InputCheckBalanceRepositoryDTO) => Promise<boolean>
 }

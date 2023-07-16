@@ -1,19 +1,19 @@
 import { DatabaseTestHelper, TestDataSource } from '../test/test-helper';
 import { OfferEntity } from '../entities';
-import { type InputAddOfferDTO } from '../../../../data/dtos/';
 import { OfferTypeORMRepository } from './offer-typeorm-repository';
 import { coinOnWalletList } from '../../../util/seeds';
+import { type InputAddOfferRepositoryDTO } from '../../../../data/dtos';
 
 type SutTypes = {
   sut: OfferTypeORMRepository
-  offerData: InputAddOfferDTO
+  addOfferData: InputAddOfferRepositoryDTO
 };
 
 const makeSut = (): SutTypes => {
   const sut = new OfferTypeORMRepository(TestDataSource);
 
   const { coin, wallet, quantity } = coinOnWalletList[2];
-  const offerData: InputAddOfferDTO = {
+  const addOfferData: InputAddOfferRepositoryDTO = {
     quantity,
     coin: { id: coin.id },
     wallet: { id: wallet.id }
@@ -21,7 +21,7 @@ const makeSut = (): SutTypes => {
 
   return {
     sut,
-    offerData
+    addOfferData
   };
 };
 
@@ -39,8 +39,8 @@ describe('OfferTypeORMRepository', () => {
 
   describe('add()', () => {
     test('should insert a new offer to the database', async () => {
-      const { sut, offerData } = makeSut();
-      const response = await sut.add(offerData);
+      const { sut, addOfferData } = makeSut();
+      const response = await sut.add(addOfferData);
 
       const offerRepository = TestDataSource.getRepository(OfferEntity);
       const offers = await offerRepository.find({
@@ -57,13 +57,13 @@ describe('OfferTypeORMRepository', () => {
       expect(offers.length).toBe(1);
       expect(offer).toEqual(
         expect.objectContaining({
-          quantity: offerData.quantity,
+          quantity: addOfferData.quantity,
           coinOnWallet: expect.objectContaining({
             coin: expect.objectContaining({
-              id: offerData.coin.id
+              id: addOfferData.coin.id
             }),
             wallet: expect.objectContaining({
-              id: offerData.wallet.id
+              id: addOfferData.wallet.id
             })
           })
         })
@@ -78,19 +78,10 @@ describe('OfferTypeORMRepository', () => {
         .spyOn(TestDataSource, 'getRepository')
         .mockImplementationOnce(() => getRepository);
 
-      const { sut, offerData } = makeSut();
-      const response = await sut.add(offerData);
+      const { sut, addOfferData } = makeSut();
+      const response = await sut.add(addOfferData);
 
       expect(response).toBe(false);
-    });
-  });
-
-  describe('validateLimit()', () => {
-    test('should return true if creation limit is valid', async () => {
-      const { sut } = makeSut();
-      const response = await sut.validateLimit();
-
-      expect(response).toBe(true);
     });
   });
 });
