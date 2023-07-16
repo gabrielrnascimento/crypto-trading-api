@@ -84,4 +84,13 @@ describe('OfferTypeORMRepository', () => {
       expect(response).toBe(false);
     });
   });
+
+  describe('validateLimit()', () => {
+    test('should return true if creation limit is valid', async () => {
+      const { sut } = makeSut();
+      const response = await sut.validateLimit();
+
+      expect(response).toBe(true);
+    });
+  });
 });
