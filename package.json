@@ -12,7 +12,8 @@
     "test:coverage": "npm test -- --coverage",
     "prepare": "husky install",
     "up": "docker compose up -d",
-    "down": "docker compose down"
+    "down": "docker compose down",
+    "seed": "ts-node ./node_modules/typeorm-extension/dist/cli/index.js seed -d ./src/infra/database/typeorm/config/data-source.ts"
   },
   "author": "Gabriel Nascimento",
   "license": "ISC",
