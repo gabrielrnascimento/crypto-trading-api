@@ -4,6 +4,27 @@ import { type InputAddOfferDTO } from '../../../../data/dtos/';
 import { OfferTypeORMRepository } from './offer-typeorm-repository';
 import { coinOnWalletList } from '../../../util/seeds';
 
+type SutTypes = {
+  sut: OfferTypeORMRepository
+  offerData: InputAddOfferDTO
+};
+
+const makeSut = (): SutTypes => {
+  const sut = new OfferTypeORMRepository(TestDataSource);
+
+  const { coin, wallet, quantity } = coinOnWalletList[2];
+  const offerData: InputAddOfferDTO = {
+    quantity,
+    coin: { id: coin.id },
+    wallet: { id: wallet.id }
+  };
+
+  return {
+    sut,
+    offerData
+  };
+};
+
 describe('OfferTypeORMRepository', () => {
   let databaseTestHelper: DatabaseTestHelper;
 
@@ -18,14 +39,7 @@ describe('OfferTypeORMRepository', () => {
 
   describe('add()', () => {
     test('should insert a new offer to the database', async () => {
-      const { coin, wallet, quantity } = coinOnWalletList[2];
-      const offerData: InputAddOfferDTO = {
-        quantity,
-        coin: { id: coin.id },
-        wallet: { id: wallet.id }
-      };
-
-      const sut = new OfferTypeORMRepository(TestDataSource);
+      const { sut, offerData } = makeSut();
       const response = await sut.add(offerData);
 
       const offerRepository = TestDataSource.getRepository(OfferEntity);
