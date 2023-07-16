@@ -1,7 +1,7 @@
 {
-  "name": "offer-counter-api",
+  "name": "crypto-trading-api",
   "version": "0.0.0",
-  "description": "API para balcão de ofertas",
+  "description": "API for buying and selling cryptocurrencies",
   "main": "index.ts",
   "scripts": {
     "dev": "ts-node-dev --respawn src/main/index.ts",
