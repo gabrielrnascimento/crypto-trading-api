@@ -5,3 +5,5 @@ export type InputAddOfferDTO = {
   wallet: Pick<Wallet, 'id'>
   coin: Pick<Coin, 'id'>
 };
+
+export type OutputAddOfferDTO = boolean;

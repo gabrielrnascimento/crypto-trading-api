@@ -1,5 +1,5 @@
 import { type Offer } from '../../../domain/models';
-import { type InputAddOfferDTO } from '../../dtos/input-add-offer-dto';
+import { type InputAddOfferDTO } from '../../dtos/';
 import { type AddOfferRepository, type CheckOfferCreationDailyLimitRepository, type CheckBalanceRepository } from '../../protocols';
 
 export class AddOfferRepositorySpy implements AddOfferRepository {

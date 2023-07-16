@@ -1,4 +1,4 @@
-import { type InputAddOfferDTO } from '../dtos/input-add-offer-dto';
+import { type InputAddOfferDTO } from '../dtos/';
 
 export interface CheckOfferCreationDailyLimitRepository {
   validateLimit: (offerData: InputAddOfferDTO) => Promise<boolean>

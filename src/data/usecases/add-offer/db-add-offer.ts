@@ -1,5 +1,5 @@
 import { type AddOffer } from '../../../domain/usecases/add-offer';
-import { type InputAddOfferDTO } from '../../dtos/input-add-offer-dto';
+import { type InputAddOfferDTO } from '../../dtos/';
 import { type CheckBalanceRepository, type AddOfferRepository, type CheckOfferCreationDailyLimitRepository } from '../../protocols';
 
 export class DbAddOffer implements AddOffer {
