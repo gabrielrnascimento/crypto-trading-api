@@ -1,7 +1,10 @@
+import { coinList } from '../../../infra/util/seeds';
 import { type Coin } from '../../models';
 
+const [{ id, code, price }] = coinList;
+
 export const makeCoinMock = (): Coin => ({
-  id: 1,
-  code: 'ANY',
-  unitPrice: 3.50
+  id,
+  code,
+  price
 });

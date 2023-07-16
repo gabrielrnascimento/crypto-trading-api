@@ -1,9 +1,9 @@
+import { userList } from '../../../infra/util/seeds';
 import { type User } from '../../models';
 
-export const makeUserMock = (): User => ({
-  id: 1,
-  email: 'any_email@mail.com',
-  wallets: [
+const [{ id, email }] = userList;
 
-  ]
+export const makeUserMock = (): User => ({
+  id,
+  email
 });
