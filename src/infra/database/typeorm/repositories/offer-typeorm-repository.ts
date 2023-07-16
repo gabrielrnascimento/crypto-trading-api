@@ -1,9 +1,10 @@
 import { type DataSource } from 'typeorm';
-import { type AddOfferRepository } from '../../../../data/protocols';
+import { type CheckOfferCreationDailyLimitRepository, type AddOfferRepository } from '../../../../data/protocols';
 import { CoinOnWalletEntity, OfferEntity } from '../entities';
-import { type InputAddOfferRepositoryDTO } from '../../../../data/dtos';
+import { type InputCheckOfferCreationDailyLimitRepositoryDTO, type InputAddOfferRepositoryDTO } from '../../../../data/dtos';
+import { OFFER_DAILY_LIMIT } from '../../../../domain/utils/constants/offer-daily-limit';
 
-export class OfferTypeORMRepository implements AddOfferRepository {
+export class OfferTypeORMRepository implements AddOfferRepository, CheckOfferCreationDailyLimitRepository {
   private readonly dataSource: DataSource;
 
   constructor (dataSource: DataSource) {
@@ -31,5 +32,21 @@ export class OfferTypeORMRepository implements AddOfferRepository {
     const offerRepository = this.dataSource.getRepository(OfferEntity);
     const response = await offerRepository.save(offer);
     return Boolean(response);
+  }
+
+  async validateLimit (data: InputCheckOfferCreationDailyLimitRepositoryDTO): Promise<boolean> {
+    const offerRepository = this.dataSource.getRepository(OfferEntity);
+
+    const offers = await offerRepository.find({
+      where: {
+        coinOnWallet: {
+          wallet: {
+            user: data
+          }
+        }
+      }
+    });
+
+    return offers.length < OFFER_DAILY_LIMIT;
   }
 }
