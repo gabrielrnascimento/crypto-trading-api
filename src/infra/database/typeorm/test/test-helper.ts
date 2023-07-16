@@ -1,6 +1,6 @@
 import { DataSource, type DataSourceOptions } from 'typeorm';
-import { runSeeders, type SeederOptions } from 'typeorm-extension';
-import { MainSeeder } from '../seeds';
+import { runSeeder, runSeeders, type SeederOptions } from 'typeorm-extension';
+import { MainSeeder, OfferSeeder } from '../seeds';
 
 const options: DataSourceOptions & SeederOptions = {
   type: 'postgres',
@@ -33,6 +33,10 @@ export class DatabaseTestHelper {
     } catch (err) {
       console.error('Testing error: ', err);
     }
+  }
+
+  public async seedOffers (): Promise<void> {
+    await runSeeder(this._connection, OfferSeeder);
   }
 
   public async init (): Promise<void> {

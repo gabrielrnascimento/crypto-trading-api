@@ -2,11 +2,12 @@ import { DatabaseTestHelper, TestDataSource } from '../test/test-helper';
 import { OfferEntity } from '../entities';
 import { OfferTypeORMRepository } from './offer-typeorm-repository';
 import { coinOnWalletList } from '../../../util/seeds';
-import { type InputAddOfferRepositoryDTO } from '../../../../data/dtos';
+import { type InputCheckOfferCreationDailyLimitRepositoryDTO, type InputAddOfferRepositoryDTO } from '../../../../data/dtos';
 
 type SutTypes = {
   sut: OfferTypeORMRepository
   addOfferData: InputAddOfferRepositoryDTO
+  checkOfferCreationLimitData: InputCheckOfferCreationDailyLimitRepositoryDTO
 };
 
 const makeSut = (): SutTypes => {
@@ -19,9 +20,12 @@ const makeSut = (): SutTypes => {
     wallet: { id: wallet.id }
   };
 
+  const checkOfferCreationLimitData: InputCheckOfferCreationDailyLimitRepositoryDTO = { id: 1 };
+
   return {
     sut,
-    addOfferData
+    addOfferData,
+    checkOfferCreationLimitData
   };
 };
 
@@ -80,6 +84,25 @@ describe('OfferTypeORMRepository', () => {
 
       const { sut, addOfferData } = makeSut();
       const response = await sut.add(addOfferData);
+
+      expect(response).toBe(false);
+    });
+  });
+
+  describe('validateLimit()', () => {
+    test('should return true if creation limit is valid', async () => {
+      const { sut, checkOfferCreationLimitData } = makeSut();
+
+      const response = await sut.validateLimit(checkOfferCreationLimitData);
+
+      expect(response).toBe(true);
+    });
+
+    test('should return false if creation limit is invalid', async () => {
+      const { sut, checkOfferCreationLimitData } = makeSut();
+      await databaseTestHelper.seedOffers();
+
+      const response = await sut.validateLimit(checkOfferCreationLimitData);
 
       expect(response).toBe(false);
     });
