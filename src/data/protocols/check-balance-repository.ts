@@ -1,5 +1,5 @@
-import { type Offer } from '../../domain/models';
+import { type InputAddOfferDTO } from '../dtos/input-add-offer-dto';
 
 export interface CheckBalanceRepository {
-  validateBalance: (data: Offer) => Promise<boolean>
+  validateBalance: (data: InputAddOfferDTO) => Promise<boolean>
 }

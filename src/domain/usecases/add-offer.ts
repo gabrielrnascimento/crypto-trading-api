@@ -1,7 +1,6 @@
-import { type Offer } from '../models';
+import { type InputAddOfferDTO } from '../../data/dtos/input-add-offer-dto';
+import { type OutputAddOfferDTO } from '../../data/dtos/output-add-offer-dto';
 
 export interface AddOffer {
-  add: (offer: AddOfferModel) => Promise<AddOfferModel>
+  add: (offer: InputAddOfferDTO) => Promise<OutputAddOfferDTO>
 }
-
-export type AddOfferModel = Offer;

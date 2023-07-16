@@ -1,5 +1,5 @@
-import { type AddOfferModel } from '../../domain/usecases/add-offer';
+import { type InputAddOfferDTO } from '../dtos/input-add-offer-dto';
 
 export interface AddOfferRepository {
-  add: (data: AddOfferModel) => Promise<boolean>
+  add: (data: InputAddOfferDTO) => Promise<boolean>
 }

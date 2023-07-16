@@ -1,12 +1,12 @@
 import { type Offer } from '../../../domain/models';
-import { type AddOfferModel } from '../../../domain/usecases/add-offer';
+import { type InputAddOfferDTO } from '../../dtos/input-add-offer-dto';
 import { type AddOfferRepository, type CheckOfferCreationDailyLimitRepository, type CheckBalanceRepository } from '../../protocols';
 
 export class AddOfferRepositorySpy implements AddOfferRepository {
-  params: AddOfferModel;
+  params: InputAddOfferDTO;
   result = true;
 
-  async add (data: AddOfferModel): Promise<boolean> {
+  async add (data: InputAddOfferDTO): Promise<boolean> {
     this.params = data;
     return this.result;
   }
