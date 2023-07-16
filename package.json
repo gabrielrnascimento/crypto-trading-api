@@ -10,7 +10,9 @@
     "test:watch": "npm test -- --watch",
     "test:staged": "npm test -- --findRelatedTests",
     "test:coverage": "npm test -- --coverage",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "up": "docker compose up -d",
+    "down": "docker compose down"
   },
   "author": "Gabriel Nascimento",
   "license": "ISC",

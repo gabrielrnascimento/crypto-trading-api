@@ -7,9 +7,10 @@ services:
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
-      POSTGRES_DB: challenge
+      POSTGRES_MULTIPLE_DATABASES: challenge, challenge_test
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./docker:/docker-entrypoint-initdb.d
 
 volumes:
   postgres_data:
