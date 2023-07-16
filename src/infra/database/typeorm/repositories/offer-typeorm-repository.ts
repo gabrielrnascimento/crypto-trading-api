@@ -1,9 +1,9 @@
 import { type DataSource } from 'typeorm';
 import { type InputAddOfferDTO } from '../../../../data/dtos';
-import { type AddOfferRepository } from '../../../../data/protocols';
+import { type CheckOfferCreationDailyLimitRepository, type AddOfferRepository } from '../../../../data/protocols';
 import { CoinOnWalletEntity, OfferEntity } from '../entities';
 
-export class OfferTypeORMRepository implements AddOfferRepository {
+export class OfferTypeORMRepository implements AddOfferRepository, CheckOfferCreationDailyLimitRepository {
   private readonly dataSource: DataSource;
 
   constructor (dataSource: DataSource) {
@@ -31,5 +31,9 @@ export class OfferTypeORMRepository implements AddOfferRepository {
     const offerRepository = this.dataSource.getRepository(OfferEntity);
     const response = await offerRepository.save(offer);
     return Boolean(response);
+  }
+
+  async validateLimit (): Promise<boolean> {
+    return true;
   }
 }
