@@ -69,5 +69,19 @@ describe('OfferTypeORMRepository', () => {
         })
       );
     });
+
+    test('should return false if fails', async () => {
+      const getRepository: any = {
+        findOne: () => null
+      };
+      jest
+        .spyOn(TestDataSource, 'getRepository')
+        .mockImplementationOnce(() => getRepository);
+
+      const { sut, offerData } = makeSut();
+      const response = await sut.add(offerData);
+
+      expect(response).toBe(false);
+    });
   });
 });
