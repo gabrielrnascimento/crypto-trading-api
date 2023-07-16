@@ -1,7 +1,8 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import CoinOnWallet from './coin-on-wallets';
 
 @Entity({ name: 'coins' })
+@Unique(['code'])
 class Coin {
   @PrimaryGeneratedColumn()
     id: number;
