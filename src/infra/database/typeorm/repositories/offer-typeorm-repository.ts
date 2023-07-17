@@ -1,7 +1,7 @@
 import { type DataSource } from 'typeorm';
 import { type CheckOfferCreationDailyLimitRepository, type AddOfferRepository, type CheckBalanceRepository } from '../../../../data/protocols';
 import { CoinOnWalletEntity, OfferEntity } from '../entities';
-import { type InputCheckOfferCreationDailyLimitRepositoryDTO, type InputAddOfferRepositoryDTO } from '../../../../data/dtos';
+import { type InputCheckOfferCreationDailyLimitRepositoryDTO, type InputAddOfferRepositoryDTO, type InputCheckBalanceRepositoryDTO } from '../../../../data/dtos';
 import { OFFER_DAILY_LIMIT } from '../../../../domain/utils/constants/offer-daily-limit';
 
 export class OfferTypeORMRepository implements AddOfferRepository, CheckOfferCreationDailyLimitRepository, CheckBalanceRepository {
@@ -50,7 +50,19 @@ export class OfferTypeORMRepository implements AddOfferRepository, CheckOfferCre
     return offers.length < OFFER_DAILY_LIMIT;
   }
 
-  async validateBalance (): Promise<boolean> {
-    return true;
+  async validateBalance (data: InputCheckBalanceRepositoryDTO): Promise<boolean> {
+    const coinOnWalletRepository = this.dataSource.getRepository(CoinOnWalletEntity);
+
+    const coin = await coinOnWalletRepository.findOne({
+      where: {
+        wallet: data.wallet,
+        coin: data.coin
+      }
+    });
+
+    if (coin) {
+      return coin.quantity >= data.quantity;
+    }
+    return false;
   }
 }
