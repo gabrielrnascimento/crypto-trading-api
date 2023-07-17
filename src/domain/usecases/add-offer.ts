@@ -1,5 +1,5 @@
-import { type OutputAddOfferDTO, type InputAddOfferDTO } from '../../data/dtos/';
+import { type InputAddOfferRepositoryDTO, type OutputAddOfferRepositoryDTO } from '../../data/dtos';
 
 export interface AddOffer {
-  add: (offer: InputAddOfferDTO) => Promise<OutputAddOfferDTO>
+  add: (offer: InputAddOfferRepositoryDTO) => Promise<OutputAddOfferRepositoryDTO>
 }
