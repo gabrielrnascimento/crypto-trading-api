@@ -2,12 +2,13 @@ import { DatabaseTestHelper, TestDataSource } from '../test/test-helper';
 import { OfferEntity } from '../entities';
 import { OfferTypeORMRepository } from './offer-typeorm-repository';
 import { coinOnWalletList } from '../../../util/seeds';
-import { type InputCheckOfferCreationDailyLimitRepositoryDTO, type InputAddOfferRepositoryDTO } from '../../../../data/dtos';
+import { type InputCheckOfferCreationDailyLimitRepositoryDTO, type InputAddOfferRepositoryDTO, type InputCheckBalanceRepositoryDTO } from '../../../../data/dtos';
 
 type SutTypes = {
   sut: OfferTypeORMRepository
   addOfferData: InputAddOfferRepositoryDTO
   checkOfferCreationLimitData: InputCheckOfferCreationDailyLimitRepositoryDTO
+  checkBalanceData: InputCheckBalanceRepositoryDTO
 };
 
 const makeSut = (): SutTypes => {
@@ -22,10 +23,17 @@ const makeSut = (): SutTypes => {
 
   const checkOfferCreationLimitData: InputCheckOfferCreationDailyLimitRepositoryDTO = { id: 1 };
 
+  const checkBalanceData: InputCheckBalanceRepositoryDTO = {
+    quantity: quantity + 1,
+    coin,
+    wallet
+  };
+
   return {
     sut,
     addOfferData,
-    checkOfferCreationLimitData
+    checkOfferCreationLimitData,
+    checkBalanceData
   };
 };
 
@@ -110,10 +118,19 @@ describe('OfferTypeORMRepository', () => {
 
   describe('validateBalance()', () => {
     test('should return true if balance is valid', async () => {
-      const { sut } = makeSut();
-      const response = await sut.validateBalance();
+      const { sut, addOfferData } = makeSut();
+
+      const response = await sut.validateBalance(addOfferData);
 
       expect(response).toBe(true);
+    });
+
+    test('should return false if balance is invalid', async () => {
+      const { sut, checkBalanceData } = makeSut();
+
+      const response = await sut.validateBalance(checkBalanceData);
+
+      expect(response).toBe(false);
     });
   });
 });
