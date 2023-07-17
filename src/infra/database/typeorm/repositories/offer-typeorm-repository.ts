@@ -1,10 +1,10 @@
 import { type DataSource } from 'typeorm';
-import { type CheckOfferCreationDailyLimitRepository, type AddOfferRepository } from '../../../../data/protocols';
+import { type CheckOfferCreationDailyLimitRepository, type AddOfferRepository, type CheckBalanceRepository } from '../../../../data/protocols';
 import { CoinOnWalletEntity, OfferEntity } from '../entities';
 import { type InputCheckOfferCreationDailyLimitRepositoryDTO, type InputAddOfferRepositoryDTO } from '../../../../data/dtos';
 import { OFFER_DAILY_LIMIT } from '../../../../domain/utils/constants/offer-daily-limit';
 
-export class OfferTypeORMRepository implements AddOfferRepository, CheckOfferCreationDailyLimitRepository {
+export class OfferTypeORMRepository implements AddOfferRepository, CheckOfferCreationDailyLimitRepository, CheckBalanceRepository {
   private readonly dataSource: DataSource;
 
   constructor (dataSource: DataSource) {
@@ -48,5 +48,9 @@ export class OfferTypeORMRepository implements AddOfferRepository, CheckOfferCre
     });
 
     return offers.length < OFFER_DAILY_LIMIT;
+  }
+
+  async validateBalance (): Promise<boolean> {
+    return true;
   }
 }
