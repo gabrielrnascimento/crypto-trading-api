@@ -2,9 +2,8 @@
   "name": "crypto-trading-api",
   "version": "0.0.0",
   "description": "API for buying and selling cryptocurrencies",
-  "main": "index.ts",
   "scripts": {
-    "dev": "ts-node-dev --respawn src/main/index.ts",
+    "dev": "ts-node-dev --respawn src/main/server.ts",
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
     "test:verbose": "jest --passWithNoTests --runInBand",
     "test:watch": "npm test -- --watch",
@@ -18,6 +17,7 @@
   "author": "Gabriel Nascimento",
   "license": "ISC",
   "devDependencies": {
+    "@types/express": "^4.17.17",
     "@types/jest": "^29.5.3",
     "@types/node": "^20.4.1",
     "eslint-config-standard-with-typescript": "^36.0.0",
@@ -31,6 +31,7 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
+    "express": "^4.18.2",
     "pg": "^8.11.1",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.3.17",
