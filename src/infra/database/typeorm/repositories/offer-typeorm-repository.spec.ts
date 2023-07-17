@@ -107,4 +107,13 @@ describe('OfferTypeORMRepository', () => {
       expect(response).toBe(false);
     });
   });
+
+  describe('validateBalance()', () => {
+    test('should return true if balance is valid', async () => {
+      const { sut } = makeSut();
+      const response = await sut.validateBalance();
+
+      expect(response).toBe(true);
+    });
+  });
 });
