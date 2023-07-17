@@ -94,6 +94,11 @@ export const walletList = [
     id: 4,
     name: 'risky investment',
     user: userList[1]
+  },
+  {
+    id: 5,
+    name: 'low risk investment',
+    user: userList[0]
   }
 ];
 
@@ -145,5 +150,50 @@ export const coinOnWalletList = [
     quantity: 7,
     coin: coinList[5],
     wallet: walletList[3]
+  },
+  {
+    id: 9,
+    quantity: 32,
+    coin: coinList[5],
+    wallet: walletList[4]
+  }
+];
+
+export const offerList = [
+  {
+    coinOnWallet: coinOnWalletList[0],
+    quantity: 10
+  },
+  {
+    coinOnWallet: coinOnWalletList[1],
+    quantity: 5
+  },
+  {
+    coinOnWallet: coinOnWalletList[2],
+    quantity: 20
+  },
+  {
+    coinOnWallet: coinOnWalletList[3],
+    quantity: 15
+  },
+  {
+    coinOnWallet: coinOnWalletList[4],
+    quantity: 8
+  },
+  {
+    coinOnWallet: coinOnWalletList[5],
+    quantity: 12
+  },
+  {
+    coinOnWallet: coinOnWalletList[6],
+    quantity: 3
+  },
+  {
+    coinOnWallet: coinOnWalletList[7],
+    quantity: 7
+  },
+  {
+    coinOnWallet: coinOnWalletList[8],
+    quantity: 32
   }
 ];

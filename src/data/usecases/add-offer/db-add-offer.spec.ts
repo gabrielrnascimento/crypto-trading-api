@@ -59,7 +59,7 @@ describe('DbAddOffer', () => {
     const offer = mockOffer();
     await sut.add(offer);
 
-    expect(checkOfferCreationDailyLimitRepositorySpy.params).toEqual(offer);
+    expect(checkOfferCreationDailyLimitRepositorySpy.params).toEqual(offer.wallet);
   });
 
   test('should throw if CheckOfferCreationDailyLimitRepository throws', async () => {

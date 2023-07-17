@@ -1,5 +1,5 @@
 import { type AddOffer } from '../../../domain/usecases/add-offer';
-import { type InputAddOfferDTO } from '../../dtos/input-add-offer-dto';
+import { type InputDbAddOfferDto } from '../../dtos';
 import { type CheckBalanceRepository, type AddOfferRepository, type CheckOfferCreationDailyLimitRepository } from '../../protocols';
 
 export class DbAddOffer implements AddOffer {
@@ -17,9 +17,9 @@ export class DbAddOffer implements AddOffer {
     this.checkBalanceRepository = checkBalanceRepository;
   }
 
-  async add (data: InputAddOfferDTO): Promise<boolean> {
+  async add (data: InputDbAddOfferDto): Promise<boolean> {
     const isValidBalance = await this.checkBalanceRepository.validateBalance(data);
-    const isValidLimit = await this.checkOfferCreationDailyLimitRepository.validateLimit(data);
+    const isValidLimit = await this.checkOfferCreationDailyLimitRepository.validateLimit(data.wallet);
     if (isValidBalance && isValidLimit) {
       return await this.addOfferRepository.add(data);
     }
