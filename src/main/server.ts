@@ -1,10 +1,8 @@
-import { app } from './config/app';
+import { setupApp } from './config/app';
 
 const port = 3000;
 
-app.get('/', (req, res) => {
-  res.send('hello, world!');
-});
+const app = setupApp();
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
