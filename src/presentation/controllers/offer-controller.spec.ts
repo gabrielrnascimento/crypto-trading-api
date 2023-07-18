@@ -2,7 +2,7 @@ import { type InputAddOfferDTO } from '../../data/dtos';
 import { type AddOffer } from '../../domain/usecases/add-offer';
 import { type Validation } from '../../utils/protocols/validation';
 import { type HttpRequest } from '../protocols/http';
-import { badRequest } from '../utils/http-helper';
+import { badRequest, serverError } from '../utils/http-helper';
 import { OfferController } from './offer-controller';
 
 class ValidationStub implements Validation {
@@ -71,5 +71,15 @@ describe('OfferController', () => {
     await sut.handle(httpRequest);
 
     expect(addSpy).toHaveBeenCalledWith(httpRequest.body);
+  });
+
+  test('should return 500 if AddOffer throws', async () => {
+    const { sut, addOfferStub } = makeSut();
+    jest.spyOn(addOfferStub, 'add').mockRejectedValueOnce(new Error('any_message'));
+    const httpRequest = makeFakeAddOfferRequest();
+
+    const response = await sut.handle(httpRequest);
+
+    expect(response).toEqual(serverError(new Error('any_message')));
   });
 });
