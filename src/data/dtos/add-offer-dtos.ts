@@ -7,6 +7,8 @@ export type InputDbAddOfferDto = {
   coin: Pick<Coin, 'id'>
 };
 
+export type InputAddOfferDTO = InputDbAddOfferDto;
+
 export type InputAddOfferRepositoryDTO = InputDbAddOfferDto;
 
 export type OutputAddOfferRepositoryDTO = boolean;
