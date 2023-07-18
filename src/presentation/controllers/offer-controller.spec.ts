@@ -2,7 +2,7 @@ import { type InputAddOfferDTO } from '../../data/dtos';
 import { type AddOffer } from '../../domain/usecases/add-offer';
 import { type Validation } from '../../utils/protocols/validation';
 import { type HttpRequest } from '../protocols/http';
-import { badRequest, serverError } from '../utils/http-helper';
+import { badRequest, created, serverError } from '../utils/http-helper';
 import { OfferController } from './offer-controller';
 
 class ValidationStub implements Validation {
@@ -81,5 +81,14 @@ describe('OfferController', () => {
     const response = await sut.handle(httpRequest);
 
     expect(response).toEqual(serverError(new Error('any_message')));
+  });
+
+  test('should return 201 if AddOffer succeeds', async () => {
+    const { sut } = makeSut();
+    const httpRequest = makeFakeAddOfferRequest();
+
+    const response = await sut.handle(httpRequest);
+
+    expect(response).toEqual(created());
   });
 });
