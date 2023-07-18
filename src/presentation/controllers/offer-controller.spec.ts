@@ -13,7 +13,7 @@ const makeFakeAddOfferRequest = (): HttpRequest<InputAddOfferDTO> => ({
   }
 });
 
-export type SutTypes = {
+type SutTypes = {
   sut: OfferController
   validationStub: ValidationStub
   addOfferStub: AddOfferStub
