@@ -1,3 +1,3 @@
 export interface Validation {
-  validate: (input: any) => any
+  validate: (input: any) => Error
 }
