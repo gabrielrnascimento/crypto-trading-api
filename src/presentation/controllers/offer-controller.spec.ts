@@ -1,21 +1,9 @@
 import { type InputAddOfferDTO } from '../../data/dtos';
-import { type AddOffer } from '../../domain/usecases/add-offer';
-import { type Validation } from '../../utils/protocols/validation';
 import { type HttpRequest } from '../protocols/http';
+import { AddOfferStub } from '../test/mocks/mock-add-offer';
+import { ValidationStub } from '../test/mocks/mock-validation';
 import { badRequest, created, serverError } from '../utils/http-helper';
 import { OfferController } from './offer-controller';
-
-class ValidationStub implements Validation {
-  validate (input: any): Error {
-    return null;
-  }
-}
-
-class AddOfferStub implements AddOffer {
-  async add (offer: InputAddOfferDTO): Promise<boolean> {
-    return true;
-  }
-}
 
 const makeFakeAddOfferRequest = (): HttpRequest<InputAddOfferDTO> => ({
   body: {
