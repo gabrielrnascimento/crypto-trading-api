@@ -10,8 +10,8 @@ module.exports = {
       '@typescript-eslint/strict-boolean-expressions': 'off',
       '@typescript-eslint/no-misused-promises': 'off',
       "@typescript-eslint/ban-types": "off",
-      "@typescript-eslint/consistent-type-definitions": "off"
-      
+      "@typescript-eslint/consistent-type-definitions": "off",
+      "@typescript-eslint/prefer-nullish-coalescing": "off"
     }
   };
   

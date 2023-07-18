@@ -6,6 +6,7 @@
     "dev": "ts-node-dev --respawn src/main/server.ts",
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
     "test:verbose": "jest --passWithNoTests --runInBand",
+    "test:vwatch": "npm run test:verbose -- --watch",
     "test:watch": "npm test -- --watch",
     "test:staged": "npm test -- --findRelatedTests",
     "test:coverage": "npm test -- --coverage",
