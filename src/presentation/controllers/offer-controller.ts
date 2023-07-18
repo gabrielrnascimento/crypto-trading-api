@@ -1,6 +1,7 @@
 import { type Validation } from '../../utils/protocols/validation';
 import { type Controller } from '../protocols/controller';
 import { type HttpRequest, type HttpResponse } from '../protocols/http';
+import { badRequest } from '../utils/http-helper';
 
 export class OfferController implements Controller {
   constructor (private readonly validation: Validation) {
@@ -8,7 +9,8 @@ export class OfferController implements Controller {
   }
 
   async handle (request: HttpRequest): Promise<HttpResponse<any>> {
-    this.validation.validate(request.body);
+    const error = this.validation.validate(request.body);
+    if (error) return badRequest(error);
     return null;
   }
 }
