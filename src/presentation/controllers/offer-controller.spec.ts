@@ -16,10 +16,23 @@ const makeFakeRequest = (): HttpRequest => ({
   }
 });
 
+export type SutTypes = {
+  sut: OfferController
+  validationStub: ValidationStub
+};
+
+const makeSut = (): SutTypes => {
+  const validationStub = new ValidationStub();
+  const sut = new OfferController(validationStub);
+  return {
+    sut,
+    validationStub
+  };
+};
+
 describe('OfferController', () => {
   test('should call Validation with correct value', async () => {
-    const validationStub = new ValidationStub();
-    const sut = new OfferController(validationStub);
+    const { sut, validationStub } = makeSut();
     const validateSpy = jest.spyOn(validationStub, 'validate');
     const httpRequest = makeFakeRequest();
 
