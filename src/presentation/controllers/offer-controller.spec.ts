@@ -1,5 +1,6 @@
 import { type Validation } from '../../utils/protocols/validation';
 import { type HttpRequest } from '../protocols/http';
+import { badRequest } from '../utils/http-helper';
 import { OfferController } from './offer-controller';
 
 class ValidationStub implements Validation {
@@ -37,6 +38,17 @@ describe('OfferController', () => {
     const httpRequest = makeFakeRequest();
 
     await sut.handle(httpRequest);
+
     expect(validateSpy).toHaveBeenCalledWith(httpRequest.body);
+  });
+
+  test('should return 400 if Validation returns an error', async () => {
+    const { sut, validationStub } = makeSut();
+    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new Error('any_message'));
+    const httpRequest = makeFakeRequest();
+
+    const response = await sut.handle(httpRequest);
+
+    expect(response).toEqual(badRequest(new Error('any_message')));
   });
 });
