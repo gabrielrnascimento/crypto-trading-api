@@ -3,7 +3,7 @@ import { type AddOffer } from '../../domain/usecases/add-offer';
 import { type Validation } from '../../utils/protocols/validation';
 import { type Controller } from '../protocols/controller';
 import { type HttpRequest, type HttpResponse } from '../protocols/http';
-import { badRequest, serverError } from '../utils/http-helper';
+import { badRequest, created, serverError } from '../utils/http-helper';
 
 export class OfferController implements Controller {
   constructor (
@@ -18,9 +18,9 @@ export class OfferController implements Controller {
     if (error) return badRequest(error);
     try {
       await this.addOffer.add(request.body);
+      return created();
     } catch (err) {
       return serverError(err);
     }
-    return null;
   }
 }
