@@ -84,7 +84,7 @@ describe('OfferTypeORMRepository', () => {
 
     test('should return false if fails', async () => {
       const getRepository: any = {
-        findOne: () => null
+        findOne: (): void => null
       };
       jest
         .spyOn(TestDataSource, 'getRepository')
