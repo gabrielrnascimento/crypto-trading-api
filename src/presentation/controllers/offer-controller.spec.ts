@@ -1,5 +1,5 @@
 import { type InputAddOfferDTO } from '../../data/dtos';
-import { InsufficientBalanceError } from '../../data/errors/insufficient-balance-error';
+import { InsufficientBalanceError, OfferCreationLimitError } from '../../data/errors';
 import { type HttpRequest } from '../protocols/http';
 import { AddOfferStub } from '../test/mocks/mock-add-offer';
 import { ValidationStub } from '../test/mocks/mock-validation';
@@ -70,6 +70,16 @@ describe('OfferController', () => {
     const response = await sut.handle(httpRequest);
 
     expect(response).toEqual(forbidden(new InsufficientBalanceError()));
+  });
+
+  test('should return 403 if AddOffer throws OfferCreationLimitError', async () => {
+    const { sut, addOfferStub } = makeSut();
+    jest.spyOn(addOfferStub, 'add').mockRejectedValueOnce(new OfferCreationLimitError());
+    const httpRequest = makeFakeAddOfferRequest();
+
+    const response = await sut.handle(httpRequest);
+
+    expect(response).toEqual(forbidden(new OfferCreationLimitError()));
   });
 
   test('should return 500 if AddOffer throws an unexpected error', async () => {
