@@ -1,7 +1,7 @@
 import { type AddOffer } from '../../../domain/usecases/add-offer';
-import { InsufficientBalanceError } from '../../errors/insufficient-balance-error';
 import { type InputDbAddOfferDto } from '../../dtos';
 import { type CheckBalanceRepository, type AddOfferRepository, type CheckOfferCreationDailyLimitRepository } from '../../protocols';
+import { InsufficientBalanceError, OfferCreationLimitError } from '../../errors';
 
 export class DbAddOffer implements AddOffer {
   private readonly addOfferRepository: AddOfferRepository;
@@ -22,9 +22,7 @@ export class DbAddOffer implements AddOffer {
     const isValidBalance = await this.checkBalanceRepository.validateBalance(data);
     if (!isValidBalance) throw new InsufficientBalanceError();
     const isValidLimit = await this.checkOfferCreationDailyLimitRepository.validateLimit(data.wallet);
-    if (isValidLimit) {
-      return await this.addOfferRepository.add(data);
-    }
-    return false;
+    if (!isValidLimit) throw new OfferCreationLimitError();
+    return await this.addOfferRepository.add(data);
   }
 }
