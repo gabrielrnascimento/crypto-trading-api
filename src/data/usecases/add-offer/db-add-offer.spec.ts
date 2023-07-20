@@ -1,5 +1,5 @@
 import { mockOffer } from '../../../domain/test/mocks';
-import { InsufficientBalanceError } from '../../errors/insufficient-balance-error';
+import { InsufficientBalanceError, OfferCreationLimitError } from '../../errors';
 import { AddOfferRepositorySpy, CheckOfferCreationDailyLimitRepositorySpy, CheckBalanceRepositorySpy } from '../../test/mocks/mock-db-offer';
 import { DbAddOffer } from './db-add-offer';
 
@@ -73,14 +73,14 @@ describe('DbAddOffer', () => {
     await expect(promise).rejects.toThrow(new Error());
   });
 
-  test('should return false if CheckOfferCreationDailyLimitRepository returns false', async () => {
+  test('should throw OfferCreationLimitError if CheckOfferCreationDailyLimitRepository returns false', async () => {
     const { sut, checkOfferCreationDailyLimitRepositorySpy } = makeSut();
     checkOfferCreationDailyLimitRepositorySpy.result = false;
 
     const offer = mockOffer();
-    const response = await sut.add(offer);
+    const response = sut.add(offer);
 
-    expect(response).toBe(false);
+    await expect(response).rejects.toThrow(new OfferCreationLimitError());
   });
 
   test('should call CheckBalanceRepository with correct values', async () => {
