@@ -1,8 +1,9 @@
 import { type InputAddOfferDTO } from '../../data/dtos';
+import { InsufficientBalanceError } from '../../data/errors/insufficient-balance-error';
 import { type HttpRequest } from '../protocols/http';
 import { AddOfferStub } from '../test/mocks/mock-add-offer';
 import { ValidationStub } from '../test/mocks/mock-validation';
-import { badRequest, created, serverError } from '../utils/http-helper';
+import { badRequest, created, forbidden, serverError } from '../utils/http-helper';
 import { OfferController } from './offer-controller';
 
 const makeFakeAddOfferRequest = (): HttpRequest<InputAddOfferDTO> => ({
@@ -61,7 +62,17 @@ describe('OfferController', () => {
     expect(addSpy).toHaveBeenCalledWith(httpRequest.body);
   });
 
-  test('should return 500 if AddOffer throws', async () => {
+  test('should return 403 if AddOffer throws InsufficientBalanceError', async () => {
+    const { sut, addOfferStub } = makeSut();
+    jest.spyOn(addOfferStub, 'add').mockRejectedValueOnce(new InsufficientBalanceError());
+    const httpRequest = makeFakeAddOfferRequest();
+
+    const response = await sut.handle(httpRequest);
+
+    expect(response).toEqual(forbidden(new InsufficientBalanceError()));
+  });
+
+  test('should return 500 if AddOffer throws an unexpected error', async () => {
     const { sut, addOfferStub } = makeSut();
     jest.spyOn(addOfferStub, 'add').mockRejectedValueOnce(new Error('any_message'));
     const httpRequest = makeFakeAddOfferRequest();
