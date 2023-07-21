@@ -50,6 +50,28 @@ export class OfferTypeORMRepository implements AddOfferRepository, CheckOfferCre
     return offers.length < OFFER_DAILY_LIMIT;
   }
 
+  private async getAvailableCoins (data: InputCheckBalanceRepositoryDTO, coinsInWallet: number): Promise<number> {
+    const offers = await this.dataSource.getRepository(OfferEntity).find({
+      relations: {
+        coinOnWallet: {
+          coin: true,
+          wallet: true
+        }
+      },
+      where: {
+        coinOnWallet: {
+          coin: data.coin,
+          wallet: data.wallet
+        }
+      }
+    });
+
+    const coinsInUse = offers.reduce(
+      (sum, coin) => sum + coin.quantity, 0);
+
+    return coinsInWallet - coinsInUse;
+  }
+
   async validateBalance (data: InputCheckBalanceRepositoryDTO): Promise<boolean> {
     const coinOnWalletRepository = this.dataSource.getRepository(CoinOnWalletEntity);
 
@@ -60,9 +82,12 @@ export class OfferTypeORMRepository implements AddOfferRepository, CheckOfferCre
       }
     });
 
-    if (coin) {
-      return coin.quantity >= data.quantity;
-    }
+    if (!coin) return false;
+
+    const availableCoins = await this.getAvailableCoins(data, coin.quantity);
+
+    if (availableCoins > 0) return availableCoins >= data.quantity;
+
     return false;
   }
 }
