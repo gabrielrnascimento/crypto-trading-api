@@ -132,5 +132,63 @@ describe('OfferTypeORMRepository', () => {
 
       expect(response).toBe(false);
     });
+
+    test('should return false if coin is not found in wallet', async () => {
+      const { sut, addOfferData } = makeSut();
+      const getRepository: any = {
+        findOne: (): void => null
+      };
+      jest
+        .spyOn(TestDataSource, 'getRepository')
+        .mockImplementationOnce(() => getRepository);
+
+      const response = await sut.validateBalance(addOfferData);
+
+      expect(response).toBe(false);
+    });
+
+    test('should return false if coin balance is not enough', async () => {
+      const { sut, addOfferData } = makeSut();
+
+      const previousOfferData = {
+        coinOnWallet: coinOnWalletList[2],
+        quantity: 5
+      };
+
+      const newOfferData: InputAddOfferRepositoryDTO = {
+        quantity: 20,
+        coin: { id: addOfferData.coin.id },
+        wallet: { id: addOfferData.wallet.id }
+      };
+
+      const repository = TestDataSource.getRepository(OfferEntity);
+      await repository.insert(previousOfferData);
+
+      const response = await sut.validateBalance(newOfferData);
+
+      expect(response).toBe(false);
+    });
+
+    test('should return false if coin balance is 0', async () => {
+      const { sut, addOfferData } = makeSut();
+
+      const previousOfferData = {
+        coinOnWallet: coinOnWalletList[2],
+        quantity: 20
+      };
+
+      const newOfferData: InputAddOfferRepositoryDTO = {
+        quantity: 20,
+        coin: { id: addOfferData.coin.id },
+        wallet: { id: addOfferData.wallet.id }
+      };
+
+      const repository = TestDataSource.getRepository(OfferEntity);
+      await repository.insert(previousOfferData);
+
+      const response = await sut.validateBalance(newOfferData);
+
+      expect(response).toBe(false);
+    });
   });
 });
