@@ -6,7 +6,7 @@ class Offer {
   @PrimaryGeneratedColumn()
     id: number;
 
-  @OneToOne(() => CoinOnWallet, { nullable: false })
+  @OneToOne(() => CoinOnWallet, { nullable: false, createForeignKeyConstraints: false })
   @JoinColumn({ name: 'coin_on_wallet_id' })
     coinOnWallet: CoinOnWallet;
 
